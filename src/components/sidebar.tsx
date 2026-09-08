@@ -14,26 +14,43 @@ export default function Sidebar() {
   const [activeSection, setActiveSection] = useState<string>(sections[0].id);
   const [isOpen, setIsOpen] = useState(false);
 
-  // Scroll-spy. The previous implementation ran a getBoundingClientRect loop
-  // over every section on every scroll event and could never highlight the
-  // first or last section reliably.
+  // Scroll-spy. The observer is only a cheap trigger — the active section is
+  // then derived from geometry. Comparing intersectionRatio between sections
+  // does not work, because ratio is relative to each element's own height: a
+  // short section sitting in the band scores higher than a tall one filling
+  // it, so the tall section never wins.
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-
-        if (visible) setActiveSection(visible.target.id);
-      },
-      { rootMargin: "-20% 0px -60% 0px", threshold: [0, 0.25, 0.5, 1] },
-    );
-
-    const observed = sections
+    const elements = sections
       .map(({ id }) => document.getElementById(id))
       .filter((el): el is HTMLElement => el !== null);
 
-    observed.forEach((el) => observer.observe(el));
+    if (elements.length === 0) return;
+
+    const pickActive = () => {
+      // The last section whose top has passed the reference line is current.
+      const anchor = window.innerHeight * 0.3;
+      let current = elements[0].id;
+
+      for (const el of elements) {
+        if (el.getBoundingClientRect().top <= anchor) current = el.id;
+      }
+
+      // At the very bottom, a short final section may never reach the line.
+      const atBottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 2;
+      if (atBottom) current = elements[elements.length - 1].id;
+
+      setActiveSection(current);
+    };
+
+    const observer = new IntersectionObserver(pickActive, {
+      threshold: [0, 0.25, 0.5, 0.75, 1],
+    });
+
+    elements.forEach((el) => observer.observe(el));
+    pickActive();
+
     return () => observer.disconnect();
   }, []);
 

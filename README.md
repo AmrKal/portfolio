@@ -9,7 +9,7 @@ a contact form, built with the Next.js App Router.
 
 | | |
 |---|---|
-| Framework | Next.js 15 (App Router) |
+| Framework | Next.js 16 (App Router, Turbopack) |
 | Language | TypeScript (strict) |
 | Styling | Tailwind CSS v4 |
 | Icons | lucide-react |
@@ -31,7 +31,7 @@ Open http://localhost:3000.
 | `npm run dev` | Start the dev server |
 | `npm run build` | Production build |
 | `npm run start` | Serve the production build |
-| `npm run lint` | ESLint (flat config) |
+| `npm run lint` | ESLint 9 (flat config) |
 | `npm run lint:fix` | ESLint with autofix |
 | `npm run typecheck` | `tsc --noEmit` |
 
