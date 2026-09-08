@@ -1,36 +1,98 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Amr Kalany — Portfolio
 
-## Getting Started
+Personal portfolio site: a single-page profile with projects, skills, resume and
+a contact form, built with the Next.js App Router.
 
-First, run the development server:
+**Live:** https://amrkalany.vercel.app
+
+## Tech stack
+
+| | |
+|---|---|
+| Framework | Next.js 15 (App Router) |
+| Language | TypeScript (strict) |
+| Styling | Tailwind CSS v4 |
+| Icons | lucide-react |
+| Analytics | @vercel/analytics |
+
+## Getting started
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Script | Description |
+|---|---|
+| `npm run dev` | Start the dev server |
+| `npm run build` | Production build |
+| `npm run start` | Serve the production build |
+| `npm run lint` | ESLint (flat config) |
+| `npm run lint:fix` | ESLint with autofix |
+| `npm run typecheck` | `tsc --noEmit` |
 
-## Learn More
+## Project structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+  app/
+    layout.tsx        Root layout: fonts, metadata, analytics
+    page.tsx          Composes the single page (server component)
+    globals.css       Tailwind entry + design tokens
+  components/
+    sidebar.tsx       Client: desktop sidebar, mobile drawer, scroll-spy
+    section.tsx       Shared <section> + <h2> wrapper
+    hero.tsx          Hero banner
+    projects.tsx      Featured grid (server)
+    github-repos.tsx  Client: live GitHub repo feed
+    project-card.tsx  Shared card used by both project lists
+    skills.tsx  about.tsx  resume.tsx  contact.tsx
+  lib/
+    site.ts           Name, role, email, social links, section order
+    projects.ts       Featured project data
+public/
+  profile.jpg  Amr_Kalany_CV.pdf  placeholder.png
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Only `sidebar.tsx`, `github-repos.tsx` and `contact.tsx` are client components —
+everything else renders on the server.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Editing content
 
-## Deploy on Vercel
+Most content lives in data files rather than markup:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Name, role, email, social links, nav order** — `src/lib/site.ts`
+- **Featured projects** — `src/lib/projects.ts`
+- **Skills** — the `skillGroups` array in `src/components/skills.tsx`
+- **Resume entries** — the `groups` array in `src/components/resume.tsx`
+- **CV** — replace `public/Amr_Kalany_CV.pdf`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Project screenshots
+
+`ProjectCard` renders a thumbnail only when a project defines an `image`. To add
+one, drop the file in `public/` and reference it:
+
+```ts
+{
+  name: "portfolio",
+  description: "...",
+  tech: ["TypeScript", "Next.js"],
+  image: "/shots/portfolio.png",
+}
+```
+
+## Notes
+
+- The "More from GitHub" feed calls the public GitHub API from the browser. That
+  endpoint is rate limited to 60 requests/hour per IP; when it fails the section
+  falls back to a link to the profile rather than blocking the page.
+- Dark mode follows the OS setting (`prefers-color-scheme`); there is no toggle.
+
+## Deployment
+
+Deployed on Vercel. Pushes to `main` deploy automatically; any other branch gets
+a preview deployment.
