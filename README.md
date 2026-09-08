@@ -34,6 +34,46 @@ Open http://localhost:3000.
 | `npm run lint` | ESLint 9 (flat config) |
 | `npm run lint:fix` | ESLint with autofix |
 | `npm run typecheck` | `tsc --noEmit` |
+| `npm run test:e2e` | Playwright end-to-end tests |
+| `npm run test:e2e:ui` | Playwright in interactive UI mode |
+
+## Environment variables
+
+The contact form posts to `/api/contact`. Without these set, the endpoint
+returns 501 and the form falls back to opening the visitor's own mail client,
+so the site works either way.
+
+| Variable | Required for | Notes |
+|---|---|---|
+| `RESEND_API_KEY` | Sending mail | From https://resend.com |
+| `CONTACT_FROM_EMAIL` | Sending mail | Must be on a domain verified in Resend |
+
+Set both in Vercel under Project → Settings → Environment Variables. For local
+use, put them in `.env.local` (already gitignored). Messages are delivered to
+`site.email` with the sender's address as `reply_to`.
+
+## Testing
+
+```bash
+npm run test:e2e
+```
+
+Playwright builds the app and starts it on port 3100 automatically. The suite
+runs against three viewports (desktop, a taller desktop, and mobile) and covers
+document semantics, the contact form, the mobile drawer, the scroll-spy, the
+GitHub feed's failure paths, and the metadata/SEO routes.
+
+Calls to the GitHub API are stubbed, so the tests are deterministic and do not
+consume the 60 requests/hour unauthenticated rate limit.
+
+The `desktop-tall` viewport exists deliberately: a past scroll-spy bug
+reproduced at 900px tall but not at Playwright's 720px default.
+
+## Continuous integration
+
+`.github/workflows/ci.yml` runs on every pull request and on pushes to `main`:
+lint, typecheck, build and a production-dependency audit in one job, the
+Playwright suite in another.
 
 ## Project structure
 
@@ -54,11 +94,14 @@ src/
     project-card.tsx  Shared card used by both project lists
     structured-data.tsx  schema.org Person JSON-LD
     skills.tsx  about.tsx  resume.tsx  contact.tsx
+  app/api/contact/
+    route.ts          Contact form endpoint (Resend)
   lib/
     site.ts           Name, role, email, social links, section order
     projects.ts       Featured project data
+e2e/                  Playwright specs
 public/
-  profile.jpg  Amr_Kalany_CV.pdf  placeholder.png
+  profile.jpg  Amr_Kalany_CV.pdf
 ```
 
 Only `sidebar.tsx`, `github-repos.tsx` and `contact.tsx` are client components —
