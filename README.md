@@ -43,6 +43,8 @@ src/
     layout.tsx        Root layout: fonts, metadata, analytics
     page.tsx          Composes the single page (server component)
     globals.css       Tailwind entry + design tokens
+    opengraph-image.tsx  Generated 1200x630 social card
+    sitemap.ts  robots.ts  SEO route handlers
   components/
     sidebar.tsx       Client: desktop sidebar, mobile drawer, scroll-spy
     section.tsx       Shared <section> + <h2> wrapper
@@ -50,6 +52,7 @@ src/
     projects.tsx      Featured grid (server)
     github-repos.tsx  Client: live GitHub repo feed
     project-card.tsx  Shared card used by both project lists
+    structured-data.tsx  schema.org Person JSON-LD
     skills.tsx  about.tsx  resume.tsx  contact.tsx
   lib/
     site.ts           Name, role, email, social links, section order
@@ -91,6 +94,12 @@ one, drop the file in `public/` and reference it:
   endpoint is rate limited to 60 requests/hour per IP; when it fails the section
   falls back to a link to the profile rather than blocking the page.
 - Dark mode follows the OS setting (`prefers-color-scheme`); there is no toggle.
+- The social card at `/opengraph-image` is generated at build time from
+  `src/app/opengraph-image.tsx`. Do not add `openGraph.images` to the metadata
+  in `layout.tsx`: explicit entries take precedence over the file convention,
+  and the portrait profile photo crops badly in a landscape card.
+- `site.url` in `src/lib/site.ts` feeds `metadataBase`, the sitemap, robots.txt
+  and the JSON-LD. Update it there if the domain changes.
 
 ## Deployment
 

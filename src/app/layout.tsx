@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { Geist, Geist_Mono } from "next/font/google";
+import StructuredData from "@/components/structured-data";
 import { site } from "@/lib/site";
 import "./globals.css";
 
@@ -43,20 +44,14 @@ export const metadata: Metadata = {
     siteName: `${site.name} — Portfolio`,
     title: `${site.name} — ${site.role}`,
     description: site.description,
-    images: [
-      {
-        url: site.profileImage,
-        width: 1920,
-        height: 2560,
-        alt: site.name,
-      },
-    ],
+    // og:image comes from app/opengraph-image.tsx. Explicit `images` here
+    // would take precedence over that file convention, and the portrait
+    // profile photo (1920x2560) crops badly in landscape social cards.
   },
   twitter: {
     card: "summary_large_image",
     title: `${site.name} — ${site.role}`,
     description: site.description,
-    images: [site.profileImage],
   },
   robots: {
     index: true,
@@ -85,6 +80,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        <StructuredData />
         <Analytics />
       </body>
     </html>
