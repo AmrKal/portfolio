@@ -1,4 +1,34 @@
+# dependencies
 node_modules
+
+# next.js
 .next
+out
 dist
+
+# production
+build
+
+# typescript
+*.tsbuildinfo
+
+# env files
 .env
+.env*.local
+
+# vercel
+.vercel
+
+# debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# playwright
+/test-results
+/playwright-report
+/blob-report
+/playwright/.cache
+
+# os
+.DS_Store

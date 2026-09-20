@@ -1,36 +1,150 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Amr Kalany — Portfolio
 
-## Getting Started
+Personal portfolio site: a single-page profile with projects, skills, resume and
+a contact form, built with the Next.js App Router.
 
-First, run the development server:
+**Live:** https://amrkalany.vercel.app
+
+## Tech stack
+
+| | |
+|---|---|
+| Framework | Next.js 16 (App Router, Turbopack) |
+| Language | TypeScript (strict) |
+| Styling | Tailwind CSS v4 |
+| Icons | lucide-react |
+| Analytics | @vercel/analytics |
+
+## Getting started
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Script | Description |
+|---|---|
+| `npm run dev` | Start the dev server |
+| `npm run build` | Production build |
+| `npm run start` | Serve the production build |
+| `npm run lint` | ESLint 9 (flat config) |
+| `npm run lint:fix` | ESLint with autofix |
+| `npm run typecheck` | `tsc --noEmit` |
+| `npm run test:e2e` | Playwright end-to-end tests |
+| `npm run test:e2e:ui` | Playwright in interactive UI mode |
 
-## Learn More
+## Environment variables
 
-To learn more about Next.js, take a look at the following resources:
+The contact form posts to `/api/contact`. Without these set, the endpoint
+returns 501 and the form falls back to opening the visitor's own mail client,
+so the site works either way.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Variable | Required for | Notes |
+|---|---|---|
+| `RESEND_API_KEY` | Sending mail | From https://resend.com |
+| `CONTACT_FROM_EMAIL` | Sending mail | Must be on a domain verified in Resend |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Set both in Vercel under Project → Settings → Environment Variables. For local
+use, put them in `.env.local` (already gitignored). Messages are delivered to
+`site.email` with the sender's address as `reply_to`.
 
-## Deploy on Vercel
+## Testing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run test:e2e
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Playwright builds the app and starts it on port 3100 automatically. The suite
+runs against three viewports (desktop, a taller desktop, and mobile) and covers
+document semantics, the contact form, the mobile drawer, the scroll-spy, the
+GitHub feed's failure paths, and the metadata/SEO routes.
+
+Calls to the GitHub API are stubbed, so the tests are deterministic and do not
+consume the 60 requests/hour unauthenticated rate limit.
+
+The `desktop-tall` viewport exists deliberately: a past scroll-spy bug
+reproduced at 900px tall but not at Playwright's 720px default.
+
+## Continuous integration
+
+`.github/workflows/ci.yml` runs on every pull request and on pushes to `main`:
+lint, typecheck, build and a production-dependency audit in one job, the
+Playwright suite in another.
+
+## Project structure
+
+```
+src/
+  app/
+    layout.tsx        Root layout: fonts, metadata, analytics
+    page.tsx          Composes the single page (server component)
+    globals.css       Tailwind entry + design tokens
+    opengraph-image.tsx  Generated 1200x630 social card
+    sitemap.ts  robots.ts  SEO route handlers
+  components/
+    sidebar.tsx       Client: desktop sidebar, mobile drawer, scroll-spy
+    section.tsx       Shared <section> + <h2> wrapper
+    hero.tsx          Hero banner
+    projects.tsx      Featured grid (server)
+    github-repos.tsx  Client: live GitHub repo feed
+    project-card.tsx  Shared card used by both project lists
+    structured-data.tsx  schema.org Person JSON-LD
+    skills.tsx  about.tsx  resume.tsx  contact.tsx
+  app/api/contact/
+    route.ts          Contact form endpoint (Resend)
+  lib/
+    site.ts           Name, role, email, social links, section order
+    projects.ts       Featured project data
+e2e/                  Playwright specs
+public/
+  profile.jpg  Amr_Kalany_CV.pdf
+```
+
+Only `sidebar.tsx`, `github-repos.tsx` and `contact.tsx` are client components —
+everything else renders on the server.
+
+## Editing content
+
+Most content lives in data files rather than markup:
+
+- **Name, role, email, social links, nav order** — `src/lib/site.ts`
+- **Featured projects** — `src/lib/projects.ts`
+- **Skills** — the `skillGroups` array in `src/components/skills.tsx`
+- **Resume entries** — the `groups` array in `src/components/resume.tsx`
+- **CV** — replace `public/Amr_Kalany_CV.pdf`
+
+### Project screenshots
+
+`ProjectCard` renders a thumbnail only when a project defines an `image`. To add
+one, drop the file in `public/` and reference it:
+
+```ts
+{
+  name: "portfolio",
+  description: "...",
+  tech: ["TypeScript", "Next.js"],
+  image: "/shots/portfolio.png",
+}
+```
+
+## Notes
+
+- The "More from GitHub" feed calls the public GitHub API from the browser. That
+  endpoint is rate limited to 60 requests/hour per IP; when it fails the section
+  falls back to a link to the profile rather than blocking the page.
+- Dark mode follows the OS setting (`prefers-color-scheme`); there is no toggle.
+- The social card at `/opengraph-image` is generated at build time from
+  `src/app/opengraph-image.tsx`. Do not add `openGraph.images` to the metadata
+  in `layout.tsx`: explicit entries take precedence over the file convention,
+  and the portrait profile photo crops badly in a landscape card.
+- `site.url` in `src/lib/site.ts` feeds `metadataBase`, the sitemap, robots.txt
+  and the JSON-LD. Update it there if the domain changes.
+
+## Deployment
+
+Deployed on Vercel. Pushes to `main` deploy automatically; any other branch gets
+a preview deployment.
