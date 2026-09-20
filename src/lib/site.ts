@@ -30,7 +30,7 @@ function resolveSiteUrl(): string {
 export const site = {
   name: "Amr Kalany",
   role: "Software Engineer",
-  email: "amrkalany@gmail.com",
+  email: "Amr.kalaany@gmail.com",
   /** Used to build the "More from GitHub" feed. */
   githubUsername: "amrkal",
   cv: "/Amr_Kalany_CV.pdf",
