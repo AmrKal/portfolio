@@ -47,6 +47,7 @@ so the site works either way.
 |---|---|---|
 | `RESEND_API_KEY` | Sending mail | From https://resend.com |
 | `CONTACT_FROM_EMAIL` | Sending mail | Must be on a domain verified in Resend |
+| `NEXT_PUBLIC_SITE_URL` | Nothing (optional) | Overrides the canonical origin |
 
 Set both in Vercel under Project → Settings → Environment Variables. For local
 use, put them in `.env.local` (already gitignored). Messages are delivered to
@@ -141,8 +142,11 @@ one, drop the file in `public/` and reference it:
   `src/app/opengraph-image.tsx`. Do not add `openGraph.images` to the metadata
   in `layout.tsx`: explicit entries take precedence over the file convention,
   and the portrait profile photo crops badly in a landscape card.
-- `site.url` in `src/lib/site.ts` feeds `metadataBase`, the sitemap, robots.txt
-  and the JSON-LD. Update it there if the domain changes.
+- `site.url` feeds `metadataBase`, the sitemap, robots.txt and the JSON-LD. It
+  is derived at build time from Vercel's `VERCEL_PROJECT_PRODUCTION_URL`, so it
+  follows the deployment instead of being hardcoded. Set `NEXT_PUBLIC_SITE_URL`
+  to override it, for example after attaching a custom domain. Outside Vercel it
+  falls back to `http://localhost:3000`.
 
 ## Deployment
 
