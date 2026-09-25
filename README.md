@@ -1,9 +1,9 @@
 # Amr Kalany — Portfolio
 
-Personal portfolio site: a single-page profile with projects, skills, resume and
-a contact form, built with the Next.js App Router.
+Personal portfolio site: a single-page profile covering background, toolkit,
+experience, selected work and a contact form, built with the Next.js App Router.
 
-**Live:** https://amrkalany.vercel.app
+**Live:** https://portfolio-os5.vercel.app
 
 ## Tech stack
 
@@ -112,10 +112,14 @@ everything else renders on the server.
 
 Most content lives in data files rather than markup:
 
-- **Name, role, email, social links, nav order** — `src/lib/site.ts`
+- **Name, role, specialty, location, email, social links, nav order** —
+  `src/lib/site.ts`. The nav labels shown in the sidebar come from the
+  `sections` array here; the `id` of each must match the section element in
+  `src/app/page.tsx`, which the scroll-spy relies on.
 - **Featured projects** — `src/lib/projects.ts`
 - **Skills** — the `skillGroups` array in `src/components/skills.tsx`
-- **Resume entries** — the `groups` array in `src/components/resume.tsx`
+- **Experience and training** — the `experience` and `training` arrays in
+  `src/components/resume.tsx`
 - **CV** — replace `public/Amr_Kalany_CV.pdf`
 
 ### Project screenshots
@@ -142,6 +146,15 @@ one, drop the file in `public/` and reference it:
   `src/app/opengraph-image.tsx`. Do not add `openGraph.images` to the metadata
   in `layout.tsx`: explicit entries take precedence over the file convention,
   and the portrait profile photo crops badly in a landscape card.
+- The sidebar scroll-spy recomputes from scroll and resize events, coalesced to
+  one pass per animation frame. It deliberately does **not** use an
+  `IntersectionObserver`: an observer fires only when a threshold boundary is
+  crossed, so a scroll that crosses none — the tail of a smooth scroll coming to
+  rest, or a few pixels of wheel — leaves the highlight on whatever it decided
+  mid-scroll. That shipped once and only failed on some viewports. `e2e/navigation.spec.ts`
+  guards it; the scrolls in that test are `behavior: "instant"` on purpose,
+  because a smooth scroll emits enough events to cross thresholds by itself and
+  hides the bug.
 - `site.url` feeds `metadataBase`, the sitemap, robots.txt and the JSON-LD. It
   is derived at build time from Vercel's `VERCEL_PROJECT_PRODUCTION_URL`, so it
   follows the deployment instead of being hardcoded. Set `NEXT_PUBLIC_SITE_URL`
