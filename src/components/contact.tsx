@@ -7,7 +7,12 @@ import { site, socialLinks } from "@/lib/site";
 
 const directLinks: { label: string; href: string; Icon: LucideIcon }[] = [
   { label: site.email, href: `mailto:${site.email}`, Icon: Mail },
-  { label: "github.com/KalanyAmr", href: socialLinks[0].href, Icon: Github },
+  {
+    // Derived so the handle cannot drift from site.ts, as it did on a rename.
+    label: socialLinks[0].href.replace("https://", ""),
+    href: socialLinks[0].href,
+    Icon: Github,
+  },
   { label: "linkedin.com/in/amrkal", href: socialLinks[1].href, Icon: Linkedin },
 ];
 

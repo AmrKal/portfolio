@@ -64,7 +64,7 @@ test.describe("GitHub feed", () => {
           {
             id: 2,
             name: "AI-CODE-REVIEWER",
-            html_url: "https://github.com/KalanyAmr/ai-code-reviewer",
+            html_url: "https://github.com/amrkal/ai-code-reviewer",
             description: "Duplicate of a featured project.",
             language: "TypeScript",
             fork: false,

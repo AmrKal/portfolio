@@ -2,6 +2,7 @@ import Section from "./section";
 import ProjectCard from "./project-card";
 import GithubRepos from "./github-repos";
 import { featuredProjects } from "@/lib/projects";
+import { socialLinks } from "@/lib/site";
 
 export default function Projects() {
   return (
@@ -37,7 +38,7 @@ export default function Projects() {
           </h3>
         </div>
         <a
-          href="https://github.com/KalanyAmr"
+          href={socialLinks[0].href}
           target="_blank"
           rel="noopener noreferrer"
           className="text-sm font-semibold text-teal-700 hover:underline dark:text-teal-300"
