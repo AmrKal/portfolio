@@ -30,8 +30,11 @@ export const featuredProjects: FeaturedProject[] = [
       "An API-backed inventory and order platform with a database schema, admin workflows and real-time synchronization.",
     outcome: "Reduced manual inventory tracking by approximately 60%.",
     tech: ["TypeScript", "Python", "MongoDB", "REST APIs"],
+    // The PowerTrack repository holds the capstone deliverables — report,
+    // presentation and archives — not the source, so "View code" sent anyone
+    // who clicked it to a folder of .docx and .zip files.
     href: "https://github.com/KalanyAmr/PowerTrack",
-    linkLabel: "View code",
+    linkLabel: "View project files",
   },
   {
     name: "Job Application Tracker",
