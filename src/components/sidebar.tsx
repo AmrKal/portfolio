@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FileText, Github, Linkedin, Mail, Menu, X } from "lucide-react";
 import { sections, site, socialLinks } from "@/lib/site";
 
@@ -13,6 +13,30 @@ const iconLinks = [
 export default function Sidebar() {
   const [activeSection, setActiveSection] = useState<string>(sections[0].id);
   const [isOpen, setIsOpen] = useState(false);
+
+  // A nav click scrolls to a section, but content that lands mid-scroll — the
+  // GitHub feed resolving — moves that section after the animation has already
+  // committed to a target. The browser's scroll anchoring does not correct an
+  // in-flight smooth scroll, so the page settles short of where it was asked
+  // to go. Remember the requested section and re-issue the scroll whenever the
+  // layout shifts underneath it.
+  const pendingTarget = useRef<string | null>(null);
+
+  const requestSection = (id: string) => {
+    pendingTarget.current = id;
+    setIsOpen(false);
+  };
+
+  useEffect(() => {
+    // Stop chasing the target once the reader takes over, or after the page
+    // has had long enough to settle.
+    const release = () => {
+      pendingTarget.current = null;
+    };
+    const events = ["wheel", "touchstart", "keydown"] as const;
+    events.forEach((e) => window.addEventListener(e, release, { passive: true }));
+    return () => events.forEach((e) => window.removeEventListener(e, release));
+  }, []);
 
   // Scroll-spy. The active section is derived from geometry rather than from
   // intersection ratios, which are relative to each element's own height and
@@ -45,6 +69,9 @@ export default function Sidebar() {
         document.documentElement.scrollHeight - 2;
       if (atBottom) current = elements[elements.length - 1].id;
 
+      // Arrived where the click asked for; stop re-issuing the scroll.
+      if (pendingTarget.current === current) pendingTarget.current = null;
+
       setActiveSection(current);
     };
 
@@ -61,7 +88,15 @@ export default function Sidebar() {
 
     // Content that arrives after mount (the GitHub feed, images) changes
     // section offsets without any scroll happening.
-    const resizeObserver = new ResizeObserver(schedule);
+    const onLayoutShift = () => {
+      const target = pendingTarget.current;
+      if (target) {
+        document.getElementById(target)?.scrollIntoView({ behavior: "smooth" });
+      }
+      schedule();
+    };
+
+    const resizeObserver = new ResizeObserver(onLayoutShift);
     resizeObserver.observe(document.body);
 
     window.addEventListener("scroll", schedule, { passive: true });
@@ -113,7 +148,7 @@ export default function Sidebar() {
               <a
                 href={`#${id}`}
                 aria-current={isActive ? "true" : undefined}
-                onClick={() => setIsOpen(false)}
+                onClick={() => requestSection(id)}
                 className={`flex items-center gap-3 rounded-xl px-4 py-2.5 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-300 ${
                   isActive
                     ? "bg-white/10 font-semibold text-white"
