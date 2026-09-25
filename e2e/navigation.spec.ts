@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-const SECTIONS = ["projects", "skills", "about", "resume", "contact"] as const;
+const SECTIONS = ["about", "skills", "resume", "projects", "contact"] as const;
 
 test.describe("scroll-spy", () => {
   test.skip(({ isMobile }) => isMobile, "Desktop sidebar only");

@@ -18,7 +18,9 @@ type GitHubRepo = {
 type Status = "loading" | "ready" | "error";
 
 const featuredNames = new Set(
-  featuredProjects.map((project) => project.name.toLowerCase()),
+  featuredProjects.map((project) =>
+    (project.repoName ?? project.name).toLowerCase(),
+  ),
 );
 
 export default function GithubRepos() {
@@ -77,7 +79,7 @@ export default function GithubRepos() {
   if (status === "loading") {
     return (
       <div
-        className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+        className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
         aria-busy="true"
         aria-live="polite"
       >
@@ -85,7 +87,7 @@ export default function GithubRepos() {
         {Array.from({ length: 3 }).map((_, index) => (
           <div
             key={index}
-            className="h-36 animate-pulse rounded-xl border border-neutral-200 bg-neutral-100 dark:border-neutral-800 dark:bg-neutral-900"
+            className="h-40 animate-pulse rounded-2xl border border-slate-200 bg-slate-100 dark:border-slate-800 dark:bg-slate-900"
           />
         ))}
       </div>
@@ -94,7 +96,7 @@ export default function GithubRepos() {
 
   if (status === "error" || repos.length === 0) {
     return (
-      <p className="text-neutral-600 dark:text-neutral-400">
+      <p className="text-slate-600 dark:text-slate-400">
         {status === "error"
           ? "Couldn’t load repositories from GitHub right now — "
           : "No additional public repositories to show — "}
@@ -102,7 +104,7 @@ export default function GithubRepos() {
           href={profileUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-blue-600 hover:underline dark:text-blue-400"
+          className="text-teal-700 hover:underline dark:text-teal-300"
         >
           browse them on GitHub
         </a>
@@ -112,7 +114,7 @@ export default function GithubRepos() {
   }
 
   return (
-    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {repos.map((repo) => (
         <ProjectCard
           key={repo.id}

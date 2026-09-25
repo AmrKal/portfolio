@@ -21,13 +21,15 @@ export default function StructuredData() {
     },
     knowsAbout: [
       "Software Engineering",
-      "Full Stack Development",
-      "Embedded Systems",
+      "Backend Development",
+      "REST APIs",
+      "Automation",
+      "FastAPI",
+      "Software Quality Assurance",
       "React",
       "Next.js",
       "TypeScript",
       "Python",
-      "C++",
       "Machine Learning",
     ],
   };

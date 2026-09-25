@@ -8,11 +8,11 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 const highlights = [
-  "React / Next.js",
-  "TypeScript",
   "Python",
-  "C / C++",
-  "Embedded Systems",
+  "FastAPI",
+  "REST APIs",
+  "Automation",
+  "Next.js",
 ];
 
 export default async function OpengraphImage() {
@@ -31,8 +31,8 @@ export default async function OpengraphImage() {
           alignItems: "center",
           gap: 64,
           padding: "0 80px",
-          background: "#0a0a0a",
-          color: "#ededed",
+          background: "#020617",
+          color: "#f8fafc",
           fontFamily: "sans-serif",
         }}
       >
@@ -48,7 +48,7 @@ export default async function OpengraphImage() {
             borderRadius: "50%",
             objectFit: "cover",
             objectPosition: "top",
-            border: "6px solid #262626",
+            border: "6px solid #1e293b",
           }}
         />
 
@@ -56,7 +56,7 @@ export default async function OpengraphImage() {
           <div style={{ fontSize: 68, fontWeight: 700, letterSpacing: -2 }}>
             {site.name}
           </div>
-          <div style={{ fontSize: 36, color: "#a3a3a3", marginTop: 8 }}>
+          <div style={{ fontSize: 36, color: "#94a3b8", marginTop: 8 }}>
             {site.role}
           </div>
 
@@ -74,9 +74,9 @@ export default async function OpengraphImage() {
                 key={item}
                 style={{
                   fontSize: 22,
-                  color: "#93c5fd",
-                  background: "#172554",
-                  border: "1px solid #1e3a8a",
+                  color: "#5eead4",
+                  background: "#0f172a",
+                  border: "1px solid #334155",
                   borderRadius: 999,
                   padding: "8px 20px",
                 }}
@@ -86,7 +86,7 @@ export default async function OpengraphImage() {
             ))}
           </div>
 
-          <div style={{ fontSize: 24, color: "#737373", marginTop: 40 }}>
+          <div style={{ fontSize: 24, color: "#64748b", marginTop: 40 }}>
             {site.url.replace("https://", "")}
           </div>
         </div>

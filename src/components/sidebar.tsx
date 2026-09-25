@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { Github, Linkedin, Menu, X } from "lucide-react";
+import { FileText, Github, Linkedin, Mail, Menu, X } from "lucide-react";
 import { sections, site, socialLinks } from "@/lib/site";
 
 const iconLinks = [
@@ -82,8 +82,8 @@ export default function Sidebar() {
   }, [isOpen]);
 
   const navigation = (
-    <nav aria-label="Section navigation" className="mt-6 w-full">
-      <ul className="flex flex-col space-y-2 text-sm font-medium">
+    <nav aria-label="Section navigation" className="mt-8 w-full">
+      <ul className="flex flex-col space-y-1 text-sm font-medium">
         {sections.map(({ id, label }) => {
           const isActive = activeSection === id;
           return (
@@ -92,12 +92,16 @@ export default function Sidebar() {
                 href={`#${id}`}
                 aria-current={isActive ? "true" : undefined}
                 onClick={() => setIsOpen(false)}
-                className={`block rounded px-4 py-2 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 ${
+                className={`flex items-center gap-3 rounded-xl px-4 py-2.5 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-300 ${
                   isActive
-                    ? "bg-neutral-800 font-semibold text-white"
-                    : "text-neutral-400 hover:bg-neutral-800 hover:text-white"
+                    ? "bg-white/10 font-semibold text-white"
+                    : "text-slate-400 hover:bg-white/5 hover:text-white"
                 }`}
               >
+                <span
+                  className={`h-1.5 w-1.5 rounded-full ${isActive ? "bg-teal-300" : "bg-slate-700"}`}
+                  aria-hidden="true"
+                />
                 {label}
               </a>
             </li>
@@ -108,21 +112,15 @@ export default function Sidebar() {
   );
 
   const socials = (
-    <div className="flex flex-col items-center gap-4">
-      <div className="flex space-x-4 text-sm">
-        {socialLinks.slice(2).map(({ name, href }) => (
-          <a
-            key={name}
-            href={href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-neutral-300 transition hover:text-white hover:underline"
-          >
-            {name}
-          </a>
-        ))}
-      </div>
-      <div className="flex space-x-4">
+    <div className="w-full space-y-5">
+      <a
+        href={`mailto:${site.email}`}
+        className="flex items-center justify-center gap-2 rounded-full bg-teal-300 px-4 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-teal-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+      >
+        <Mail className="h-4 w-4" aria-hidden="true" />
+        Let&rsquo;s talk
+      </a>
+      <div className="flex items-center justify-center gap-3">
         {iconLinks.map(({ name, href, Icon }) => (
           <a
             key={name}
@@ -130,28 +128,40 @@ export default function Sidebar() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={name}
-            className="rounded transition hover:text-blue-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+            className="rounded-lg p-2 text-slate-400 transition hover:bg-white/5 hover:text-teal-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-300"
           >
             <Icon className="h-6 w-6" aria-hidden="true" />
           </a>
         ))}
+        <a
+          href={site.cv}
+          aria-label="Download CV"
+          download
+          className="rounded-lg p-2 text-slate-400 transition hover:bg-white/5 hover:text-teal-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-300"
+        >
+          <FileText className="h-6 w-6" aria-hidden="true" />
+        </a>
       </div>
+      <p className="text-center text-xs text-slate-500">{site.location}</p>
     </div>
   );
 
   const profile = (
-    <div className="flex flex-col items-center space-y-4">
-      <Image
-        src={site.profileImage}
-        alt={`Portrait of ${site.name}`}
-        width={96}
-        height={96}
-        priority
-        className="h-24 w-24 rounded-full border border-neutral-700 object-cover"
-      />
-      <div className="text-center">
-        <p className="text-xl font-semibold">{site.name}</p>
-        <p className="text-sm text-neutral-400">{site.role}</p>
+    <div className="flex w-full flex-col items-center">
+      <div className="relative">
+        <Image
+          src={site.profileImage}
+          alt={`Portrait of ${site.name}`}
+          width={88}
+          height={88}
+          priority
+          className="h-22 w-22 rounded-2xl border border-white/10 object-cover object-top"
+        />
+        <span className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-4 border-slate-950 bg-teal-300" aria-hidden="true" />
+      </div>
+      <div className="mt-4 text-center">
+        <p className="text-xl font-semibold tracking-tight">{site.name}</p>
+        <p className="mt-1 text-sm text-slate-400">{site.role}</p>
       </div>
       {navigation}
     </div>
@@ -160,15 +170,18 @@ export default function Sidebar() {
   return (
     <>
       {/* Mobile header */}
-      <header className="fixed inset-x-0 top-0 z-40 flex h-16 items-center justify-between border-b border-neutral-800 bg-neutral-900 px-4 text-white lg:hidden">
-        <span className="font-semibold">{site.name}</span>
+      <header className="fixed inset-x-0 top-0 z-40 flex h-16 items-center justify-between border-b border-white/10 bg-slate-950/95 px-4 text-white backdrop-blur lg:hidden">
+        <div>
+          <span className="font-semibold">{site.name}</span>
+          <span className="ml-2 text-xs text-teal-300">Backend</span>
+        </div>
         <button
           type="button"
           onClick={() => setIsOpen((open) => !open)}
           aria-expanded={isOpen}
           aria-controls="mobile-nav"
           aria-label={isOpen ? "Close menu" : "Open menu"}
-          className="rounded p-2 transition hover:bg-neutral-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+          className="rounded-lg p-2 transition hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-300"
         >
           {isOpen ? (
             <X className="h-6 w-6" aria-hidden="true" />
@@ -188,7 +201,7 @@ export default function Sidebar() {
           />
           <div
             id="mobile-nav"
-            className="fixed inset-y-0 left-0 z-50 flex w-64 flex-col justify-between gap-8 overflow-y-auto bg-neutral-900 px-6 py-10 text-white shadow-xl lg:hidden"
+            className="fixed inset-y-0 left-0 z-50 flex w-72 flex-col justify-between gap-8 overflow-y-auto bg-slate-950 px-6 py-10 text-white shadow-xl lg:hidden"
           >
             {profile}
             {socials}
@@ -197,7 +210,7 @@ export default function Sidebar() {
       )}
 
       {/* Desktop sidebar */}
-      <aside className="fixed hidden h-screen w-64 flex-col items-center justify-between overflow-y-auto bg-neutral-900 px-6 py-10 text-white shadow-md lg:flex">
+      <aside className="fixed hidden h-screen w-72 flex-col items-center justify-between overflow-y-auto border-r border-white/5 bg-slate-950 px-7 py-10 text-white lg:flex">
         {profile}
         {socials}
       </aside>
