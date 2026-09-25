@@ -14,11 +14,15 @@ export default function Sidebar() {
   const [activeSection, setActiveSection] = useState<string>(sections[0].id);
   const [isOpen, setIsOpen] = useState(false);
 
-  // Scroll-spy. The observer is only a cheap trigger — the active section is
-  // then derived from geometry. Comparing intersectionRatio between sections
-  // does not work, because ratio is relative to each element's own height: a
-  // short section sitting in the band scores higher than a tall one filling
-  // it, so the tall section never wins.
+  // Scroll-spy. The active section is derived from geometry rather than from
+  // intersection ratios, which are relative to each element's own height and
+  // so let a short section outscore a tall one that actually fills the band.
+  //
+  // The recompute is driven by scroll events rather than by an
+  // IntersectionObserver. An observer only fires when a threshold boundary is
+  // crossed, so a scroll that settles between thresholds — the tail of a
+  // smooth scroll, or a few pixels of wheel movement — produced no callback
+  // and left the highlight on whatever it had decided mid-scroll.
   useEffect(() => {
     const elements = sections
       .map(({ id }) => document.getElementById(id))
@@ -44,14 +48,32 @@ export default function Sidebar() {
       setActiveSection(current);
     };
 
-    const observer = new IntersectionObserver(pickActive, {
-      threshold: [0, 0.25, 0.5, 0.75, 1],
-    });
+    // Coalesce to at most one recompute per frame, so a burst of scroll
+    // events costs five rect reads rather than five per event.
+    let frame = 0;
+    const schedule = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        pickActive();
+      });
+    };
 
-    elements.forEach((el) => observer.observe(el));
+    // Content that arrives after mount (the GitHub feed, images) changes
+    // section offsets without any scroll happening.
+    const resizeObserver = new ResizeObserver(schedule);
+    resizeObserver.observe(document.body);
+
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
     pickActive();
 
-    return () => observer.disconnect();
+    return () => {
+      if (frame) cancelAnimationFrame(frame);
+      resizeObserver.disconnect();
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+    };
   }, []);
 
   // Close the mobile drawer on Escape, and stop the page behind it scrolling.
