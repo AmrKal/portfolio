@@ -71,6 +71,42 @@ test.describe("scroll-spy", () => {
     }
   });
 
+  // Regression guard. The repository feed resolves after first paint, which
+  // makes the page taller. When it lands mid-scroll the browser has already
+  // committed the smooth scroll to a target that has since moved, and scroll
+  // anchoring does not correct an in-flight animation — the page settled ~650px
+  // short, inside Selected work. Only latencies between roughly 100ms and 600ms
+  // hit that window, which is exactly how long a real GitHub call takes, so CI
+  // saw it intermittently while a stubbed (instant) feed never did.
+  test("lands on the chosen section when the feed loads mid-scroll", async ({
+    page,
+  }) => {
+    await page.route("https://api.github.com/**", async (route) => {
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      await route.fulfill({
+        status: 200,
+        json: Array.from({ length: 12 }, (_, index) => ({
+          id: 2000 + index,
+          name: `feed-repo-${index}`,
+          html_url: `https://github.com/amrkal/feed-repo-${index}`,
+          description:
+            "A repository description long enough to wrap onto a second line.",
+          language: "Python",
+          fork: false,
+          private: false,
+        })),
+      });
+    });
+
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await page.locator('aside a[href="#contact"]').click();
+
+    await expect(page.locator("#contact")).toBeInViewport();
+    await expect(page.locator('a[aria-current="true"]').first()).toHaveText(
+      SECTION_LABELS.contact,
+    );
+  });
+
   test("tracks the reading position during a continuous scroll", async ({ page }) => {
     await page.goto("/");
 
