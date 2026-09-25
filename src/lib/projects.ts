@@ -19,7 +19,7 @@ export const featuredProjects: FeaturedProject[] = [
     description:
       "Automates pull-request analysis by processing GitHub diffs and returning structured review feedback through backend API endpoints.",
     tech: ["Python", "FastAPI", "GitHub API", "OpenAI API"],
-    href: "https://github.com/KalanyAmr/ai-code-reviewer",
+    href: "https://github.com/amrkal/ai-code-reviewer",
     linkLabel: "View code",
   },
   {
@@ -33,7 +33,7 @@ export const featuredProjects: FeaturedProject[] = [
     // The PowerTrack repository holds the capstone deliverables — report,
     // presentation and archives — not the source, so "View code" sent anyone
     // who clicked it to a folder of .docx and .zip files.
-    href: "https://github.com/KalanyAmr/PowerTrack",
+    href: "https://github.com/amrkal/PowerTrack",
     linkLabel: "View project files",
   },
   {
@@ -43,7 +43,7 @@ export const featuredProjects: FeaturedProject[] = [
     description:
       "Turns job-related email into structured application records and dashboard views with filters, response statistics and export.",
     tech: ["Python", "Pandas", "Streamlit"],
-    href: "https://github.com/KalanyAmr/job-mail-tracker",
+    href: "https://github.com/amrkal/job-mail-tracker",
     linkLabel: "View code",
   },
   {

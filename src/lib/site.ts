@@ -34,7 +34,7 @@ export const site = {
   location: "Israel · Open to remote opportunities",
   email: "amr.kalaany@gmail.com",
   /** Used to build the "More from GitHub" feed. */
-  githubUsername: "KalanyAmr",
+  githubUsername: "amrkal",
   cv: "/Amr_Kalany_CV.pdf",
   description:
     "Software engineer focused on Python APIs, data pipelines and automation, " +
@@ -44,7 +44,7 @@ export const site = {
 } as const;
 
 export const socialLinks = [
-  { name: "GitHub", href: "https://github.com/KalanyAmr" },
+  { name: "GitHub", href: "https://github.com/amrkal" },
   { name: "LinkedIn", href: "https://linkedin.com/in/amrkal" },
 ] as const;
 
