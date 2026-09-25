@@ -28,14 +28,16 @@ export const metadata: Metadata = {
   creator: site.name,
   keywords: [
     site.name,
-    "Software Engineer",
-    "Full Stack Developer",
-    "Embedded Systems",
+    "Backend Software Engineer",
+    "Python Developer",
+    "API Developer",
+    "Automation Engineer",
+    "FastAPI",
     "React",
     "Next.js",
     "TypeScript",
     "Python",
-    "Portfolio",
+    "Software Engineering Portfolio",
   ],
   openGraph: {
     type: "profile",
@@ -64,8 +66,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+    { media: "(prefers-color-scheme: light)", color: "#020617" },
+    { media: "(prefers-color-scheme: dark)", color: "#020617" },
   ],
 };
 

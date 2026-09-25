@@ -7,7 +7,7 @@ import { site, socialLinks } from "@/lib/site";
 
 const directLinks: { label: string; href: string; Icon: LucideIcon }[] = [
   { label: site.email, href: `mailto:${site.email}`, Icon: Mail },
-  { label: "github.com/amrkal", href: socialLinks[0].href, Icon: Github },
+  { label: "github.com/KalanyAmr", href: socialLinks[0].href, Icon: Github },
   { label: "linkedin.com/in/amrkal", href: socialLinks[1].href, Icon: Linkedin },
 ];
 
@@ -17,7 +17,7 @@ const fields = [
 ] as const;
 
 const inputClasses =
-  "mt-1 block w-full rounded border border-neutral-300 bg-white px-4 py-2 text-neutral-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100";
+  "mt-2 block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-950 shadow-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-white";
 
 type Status =
   | { state: "idle" }
@@ -100,32 +100,41 @@ export default function Contact() {
   }[status.state];
 
   return (
-    <Section id="contact" title="Contact" intro="Feel free to reach out:">
-      <ul className="mb-10 space-y-2 text-lg">
+    <Section
+      id="contact"
+      eyebrow="Contact"
+      title="Have a system to build or improve?"
+      intro="I’m open to backend engineering opportunities, practical automation work and product-minded teams."
+    >
+      <div className="grid gap-10 rounded-3xl bg-slate-950 p-6 text-white md:p-10 lg:grid-cols-[.8fr_1.2fr]">
+      <div>
+      <p className="text-sm leading-6 text-slate-400">
+        The fastest way to reach me is email. You can also review my code and
+        professional background at the links below.
+      </p>
+      <ul className="mt-8 space-y-4">
         {directLinks.map(({ label, href, Icon }) => (
           <li key={href} className="flex items-center gap-2">
-            <Icon
-              className="h-5 w-5 text-blue-600 dark:text-blue-400"
-              aria-hidden="true"
-            />
+            <Icon className="h-5 w-5 text-teal-300" aria-hidden="true" />
             <a
               href={href}
               target={href.startsWith("mailto:") ? undefined : "_blank"}
               rel={href.startsWith("mailto:") ? undefined : "noopener noreferrer"}
-              className="text-blue-600 hover:underline dark:text-blue-400"
+              className="break-all text-sm text-slate-200 hover:text-teal-300 hover:underline"
             >
               {label}
             </a>
           </li>
         ))}
       </ul>
+      </div>
 
-      <form onSubmit={handleSubmit} className="relative space-y-6">
+      <form onSubmit={handleSubmit} className="relative space-y-5 rounded-2xl bg-white p-6 text-slate-950 dark:bg-slate-900 dark:text-white">
         {fields.map(({ name, label, type, autoComplete }) => (
           <div key={name}>
             <label
               htmlFor={name}
-              className="block text-sm font-medium text-neutral-900 dark:text-neutral-100"
+              className="block text-sm font-medium text-slate-900 dark:text-slate-100"
             >
               {label}
               <span className="text-red-500" aria-hidden="true">
@@ -149,7 +158,7 @@ export default function Contact() {
         <div>
           <label
             htmlFor="message"
-            className="block text-sm font-medium text-neutral-900 dark:text-neutral-100"
+            className="block text-sm font-medium text-slate-900 dark:text-slate-100"
           >
             Message
             <span className="text-red-500" aria-hidden="true">
@@ -185,7 +194,7 @@ export default function Contact() {
         <button
           type="submit"
           disabled={status.state === "sending"}
-          className="rounded bg-blue-600 px-6 py-2 font-medium text-white transition hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+          className="w-full rounded-full bg-teal-400 px-6 py-3 font-semibold text-slate-950 transition hover:bg-teal-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {status.state === "sending" ? "Sending…" : "Send Message"}
         </button>
@@ -195,12 +204,13 @@ export default function Contact() {
           className={`text-sm ${
             status.state === "error"
               ? "text-red-600 dark:text-red-400"
-              : "text-neutral-600 dark:text-neutral-400"
+              : "text-slate-500 dark:text-slate-400"
           }`}
         >
           {status.state === "error" ? status.message : statusMessage}
         </p>
       </form>
+      </div>
     </Section>
   );
 }

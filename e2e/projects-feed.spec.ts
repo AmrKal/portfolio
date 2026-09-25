@@ -63,8 +63,8 @@ test.describe("GitHub feed", () => {
         json: [
           {
             id: 2,
-            name: "PORTFOLIO",
-            html_url: "https://github.com/amrkal/portfolio",
+            name: "AI-CODE-REVIEWER",
+            html_url: "https://github.com/KalanyAmr/ai-code-reviewer",
             description: "Duplicate of a featured project.",
             language: "TypeScript",
             fork: false,
@@ -82,7 +82,7 @@ test.describe("GitHub feed", () => {
     await page.route(GITHUB_API, (route) => route.abort());
     await page.goto("/");
 
-    await expect(page.getByRole("heading", { name: "ai-code-reviewer" })).toBeVisible();
-    await expect(page.getByRole("heading", { name: "WorldAppTrivia" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "AI Code Reviewer" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "PowerStock" })).toBeVisible();
   });
 });

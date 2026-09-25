@@ -1,6 +1,13 @@
 import { test, expect } from "@playwright/test";
 
-const SECTIONS = ["projects", "skills", "about", "resume", "contact"] as const;
+const SECTIONS = ["about", "skills", "resume", "projects", "contact"] as const;
+const SECTION_LABELS: Record<(typeof SECTIONS)[number], string> = {
+  about: "Profile",
+  skills: "Toolkit",
+  resume: "Experience",
+  projects: "Selected work",
+  contact: "Contact",
+};
 
 test.describe("scroll-spy", () => {
   test.skip(({ isMobile }) => isMobile, "Desktop sidebar only");
@@ -14,10 +21,55 @@ test.describe("scroll-spy", () => {
       await page.locator(`aside a[href="#${id}"]`).click();
 
       await expect(page.locator('a[aria-current="true"]').first()).toHaveText(
-        new RegExp(id, "i"),
+        SECTION_LABELS[id],
       );
     });
   }
+
+  // Regression guard. The spy was once driven only by an IntersectionObserver,
+  // which fires on threshold crossings. A scroll small enough to cross none —
+  // the tail of a smooth scroll, or a nudge of the wheel — produced no
+  // callback, so the highlight kept whatever it had decided mid-scroll. This
+  // parks each section's top just below the reference line and nudges it
+  // across by a few pixels, which crosses no threshold at all.
+  test("updates on scrolls too small to cross an observer threshold", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await page.waitForTimeout(300);
+
+    for (const id of SECTIONS.slice(1)) {
+      await page.evaluate((sectionId) => {
+        const anchor = window.innerHeight * 0.3;
+        const el = document.getElementById(sectionId)!;
+        const top = el.getBoundingClientRect().top;
+        // "instant" matters: the page sets scroll-behavior: smooth, and a
+        // smooth scroll emits enough events to cross thresholds on its own,
+        // which would hide the very bug this guards against.
+        window.scrollTo({ top: window.scrollY + (top - anchor) - 8, behavior: "instant" });
+      }, id);
+      await page.waitForTimeout(150);
+
+      await page.evaluate(() => window.scrollBy({ top: 16, behavior: "instant" }));
+
+      const expected = await page.evaluate((ids) => {
+        const anchor = window.innerHeight * 0.3;
+        let current = ids[0];
+        for (const candidate of ids) {
+          const el = document.getElementById(candidate);
+          if (el && el.getBoundingClientRect().top <= anchor) current = candidate;
+        }
+        const atBottom =
+          window.innerHeight + window.scrollY >=
+          document.documentElement.scrollHeight - 2;
+        return atBottom ? ids[ids.length - 1] : current;
+      }, [...SECTIONS]);
+
+      await expect(page.locator('a[aria-current="true"]').first()).toHaveText(
+        SECTION_LABELS[expected],
+      );
+    }
+  });
 
   test("tracks the reading position during a continuous scroll", async ({ page }) => {
     await page.goto("/");
@@ -44,7 +96,7 @@ test.describe("scroll-spy", () => {
       }, [...SECTIONS]);
 
       await expect(page.locator('a[aria-current="true"]').first()).toHaveText(
-        new RegExp(expected, "i"),
+        SECTION_LABELS[expected],
       );
     }
   });

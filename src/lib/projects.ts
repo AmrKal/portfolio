@@ -1,79 +1,64 @@
 export type FeaturedProject = {
   name: string;
+  repoName?: string;
+  eyebrow: string;
   description: string;
   tech: string[];
-  github?: string;
+  outcome?: string;
+  href?: string;
+  linkLabel?: string;
   /** Optional screenshot under /public, e.g. "/shots/portfolio.png". */
   image?: string;
 };
 
 export const featuredProjects: FeaturedProject[] = [
   {
-    name: "portfolio",
+    name: "AI Code Reviewer",
+    repoName: "ai-code-reviewer",
+    eyebrow: "Developer tooling",
     description:
-      "My personal portfolio website built with Next.js and Tailwind CSS.",
-    tech: ["TypeScript", "Next.js", "Tailwind"],
-    github: "https://github.com/amrkal/portfolio",
+      "Automates pull-request analysis by processing GitHub diffs and returning structured review feedback through backend API endpoints.",
+    tech: ["Python", "FastAPI", "GitHub API", "OpenAI API"],
+    href: "https://github.com/KalanyAmr/ai-code-reviewer",
+    linkLabel: "View code",
   },
   {
-    name: "WorldAppTrivia",
+    name: "PowerStock",
+    repoName: "PowerTrack",
+    eyebrow: "Inventory operations",
     description:
-      "Mobile trivia game built with Flutter and Dart, featuring multiple categories.",
-    tech: ["Dart", "Flutter"],
-    github: "https://github.com/amrkal/WorldAppTrivia",
+      "An API-backed inventory and order platform with a database schema, admin workflows and real-time synchronization.",
+    outcome: "Reduced manual inventory tracking by approximately 60%.",
+    tech: ["TypeScript", "Python", "MongoDB", "REST APIs"],
+    href: "https://github.com/KalanyAmr/PowerTrack",
+    linkLabel: "View code",
   },
   {
-    name: "job-mail-tracker",
+    name: "Job Application Tracker",
+    repoName: "job-mail-tracker",
+    eyebrow: "Workflow automation",
     description:
-      "Python tool to parse job-related emails and track application metadata in Excel.",
-    tech: ["Python"],
-    github: "https://github.com/amrkal/job-mail-tracker",
+      "Turns job-related email into structured application records and dashboard views with filters, response statistics and export.",
+    tech: ["Python", "Pandas", "Streamlit"],
+    href: "https://github.com/KalanyAmr/job-mail-tracker",
+    linkLabel: "View code",
   },
   {
-    name: "ai-code-reviewer",
+    name: "TradeForge",
+    repoName: "CryptoBot",
+    eyebrow: "Trading systems",
     description:
-      "AI-powered GitHub code reviewer that analyzes repos using GPT and shows side-by-side diffs.",
-    tech: ["Python", "React"],
-    github: "https://github.com/amrkal/ai-code-reviewer",
+      "A full-stack crypto trading platform supporting paper, backtest and live modes, with risk controls and Binance integration.",
+    tech: ["Python", "FastAPI", "Next.js", "Binance API"],
   },
   {
-    name: "PowerTrack",
+    name: "JAM Pizza Truck",
+    repoName: "jam-pizza-truck",
+    eyebrow: "Customer experience",
     description:
-      "Final year project for order and inventory management, including admin control panel.",
-    tech: ["TypeScript", "React"],
-  },
-  {
-    name: "AdminPanelApp",
-    description:
-      "Private admin dashboard for managing orders and inventory, built with TypeScript.",
-    tech: ["TypeScript"],
-  },
-  {
-    name: "ElysianSoftech",
-    description:
-      "Authentication system with login and registration built using JavaScript.",
-    tech: ["JavaScript"],
-    github: "https://github.com/amrkal/ElysianSoftech",
-  },
-  {
-    name: "TennisCourt-BackEnd",
-    description:
-      "Python-based backend API for managing tennis court reservations and user data.",
-    tech: ["Python"],
-    github: "https://github.com/amrkal/TennisCourt-BackEnd",
-  },
-  {
-    name: "TennisCourt-FrontEnd",
-    description:
-      "React frontend for booking and managing tennis court reservations.",
-    tech: ["JavaScript"],
-    github: "https://github.com/amrkal/TennisCourt-FrontEnd",
-  },
-  {
-    name: "Braude-Mid-Project",
-    description:
-      "Flower shop management system built in Java as part of a university software engineering project.",
-    tech: ["Java"],
-    github: "https://github.com/amrkal/Braude-Mid-Project",
+      "A Hebrew right-to-left digital menu and ordering flow that lets customers place an order directly through WhatsApp.",
+    tech: ["Next.js", "RTL", "WhatsApp"],
+    href: "https://jam-pizza-truck.vercel.app",
+    linkLabel: "Visit site",
   },
 ];
