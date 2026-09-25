@@ -1,6 +1,13 @@
 import { test, expect } from "@playwright/test";
 
 const SECTIONS = ["about", "skills", "resume", "projects", "contact"] as const;
+const SECTION_LABELS: Record<(typeof SECTIONS)[number], string> = {
+  about: "Profile",
+  skills: "Toolkit",
+  resume: "Experience",
+  projects: "Selected work",
+  contact: "Contact",
+};
 
 test.describe("scroll-spy", () => {
   test.skip(({ isMobile }) => isMobile, "Desktop sidebar only");
@@ -14,7 +21,7 @@ test.describe("scroll-spy", () => {
       await page.locator(`aside a[href="#${id}"]`).click();
 
       await expect(page.locator('a[aria-current="true"]').first()).toHaveText(
-        new RegExp(id, "i"),
+        SECTION_LABELS[id],
       );
     });
   }
@@ -44,7 +51,7 @@ test.describe("scroll-spy", () => {
       }, [...SECTIONS]);
 
       await expect(page.locator('a[aria-current="true"]').first()).toHaveText(
-        new RegExp(expected, "i"),
+        SECTION_LABELS[expected],
       );
     }
   });

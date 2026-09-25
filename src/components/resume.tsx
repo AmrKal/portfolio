@@ -67,7 +67,7 @@ export default function Resume() {
           </ol>
         </div>
 
-        <aside className="space-y-5">
+        <div className="space-y-5">
           <div className="rounded-3xl bg-slate-950 p-7 text-white dark:border dark:border-slate-800">
             <GraduationCap className="h-7 w-7 text-teal-300" aria-hidden="true" />
             <p className="mt-7 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Education</p>
@@ -93,7 +93,7 @@ export default function Resume() {
             <Download className="h-4 w-4" aria-hidden="true" />
             Download the full CV
           </a>
-        </aside>
+        </div>
       </div>
     </Section>
   );
