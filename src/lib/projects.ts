@@ -61,7 +61,7 @@ export const featuredProjects: FeaturedProject[] = [
     description:
       "A Hebrew right-to-left digital menu and ordering flow that lets customers place an order directly through WhatsApp.",
     tech: ["Next.js", "RTL", "WhatsApp"],
-    href: "https://jam-pizza-truck.vercel.app",
+    href: "https://jampizzatruck.com",
     linkLabel: "Visit site",
   },
 ];
